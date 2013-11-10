@@ -9,6 +9,7 @@ public class Hexagon : MonoBehaviour
 	public float m_Height = 1f;
 	public float m_Radius = 1f;
 	
+	[HideInInspector]
 	public GameManager m_GameManager;
 	
 	public int m_Id;
@@ -114,29 +115,14 @@ public class Hexagon : MonoBehaviour
 	public IEnumerable GetNeighbors()
 	{
 		var map = m_GameManager.m_Map;
-		if (map.ContainsKey(m_Coordinates-m_GameManager.m_AxialAxis0))
+		foreach(Vector2 delta in m_GameManager.GetNeighborCoordinates())
 		{
-			yield return map[m_Coordinates-m_GameManager.m_AxialAxis0];
-		}
-		if (map.ContainsKey(m_Coordinates+m_GameManager.m_AxialAxis0))
-		{
-			yield return map[m_Coordinates+m_GameManager.m_AxialAxis0];
-		}
-		if (map.ContainsKey(m_Coordinates-m_GameManager.m_AxialAxis1))
-		{
-			yield return map[m_Coordinates-m_GameManager.m_AxialAxis1];
-		}
-		if (map.ContainsKey(m_Coordinates+m_GameManager.m_AxialAxis1))
-		{
-			yield return map[m_Coordinates+m_GameManager.m_AxialAxis1];
-		}
-		if (map.ContainsKey(m_Coordinates-m_GameManager.m_AxialAxis2))
-		{
-			yield return map[m_Coordinates-m_GameManager.m_AxialAxis2];
-		}
-		if (map.ContainsKey(m_Coordinates+m_GameManager.m_AxialAxis2))
-		{
-			yield return map[m_Coordinates+m_GameManager.m_AxialAxis2];
+			Vector2 newCoordinates = m_Coordinates + delta;
+			if (map.ContainsKey(newCoordinates))
+			{
+				Hexagon neighbor = map[newCoordinates];
+				yield return neighbor;
+			}
 		}
 	}
 }
