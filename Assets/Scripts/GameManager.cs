@@ -18,11 +18,13 @@ public class GameManager : MonoBehaviour
 	public List<Material> m_Materials = new List<Material>();
 	public Material m_BackgroundMaterial;
 	
-	public TextMesh m_ScoreTextMesh;
+	public GUIText m_ScoreText;
 	int m_Score;
 	
 	void Start ()
 	{
+		Application.targetFrameRate = 300;
+		
 		// Marker
 		m_CurrentPosition = Vector2.zero;
 		m_Marker = GameObject.Instantiate(m_MarkerPrefab) as GameObject;
@@ -52,7 +54,7 @@ public class GameManager : MonoBehaviour
 		
 		CreateHexagon(Vector2.zero);
 		
-		m_ScoreTextMesh.text = m_Score.ToString();
+		m_ScoreText.text = m_Score.ToString();
 	}
 
 	Hexagon CreateHexagon(Vector2 a_AxialCoordinates)
@@ -124,7 +126,7 @@ public class GameManager : MonoBehaviour
 		if (!m_Map.ContainsKey(newPosition)) return;
 		if (m_Map[newPosition].m_Id != -1) return;
 		
-		m_Score += 5;
+		m_Score += 1;
 		
 		m_CurrentPosition = newPosition;	
 		m_Marker.transform.position = _AxialCoordinatesTo3DCoordinates(m_CurrentPosition) + Vector3.up;
@@ -145,7 +147,7 @@ public class GameManager : MonoBehaviour
 				}
 			}
 		}
-		
+	
 		// Check if there is still some possible moves
 		bool validMove = false;
 		foreach(Hexagon neighbor in hex.GetNeighbors())
@@ -161,7 +163,7 @@ public class GameManager : MonoBehaviour
 			Application.LoadLevel(Application.loadedLevelName);
 		}
 		
-		m_ScoreTextMesh.text = m_Score.ToString();
+		m_ScoreText.text = m_Score.ToString();
 	}
 	
 	[HideInInspector]

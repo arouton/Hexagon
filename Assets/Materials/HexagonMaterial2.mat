@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: HexagonMaterial2
-  m_Shader: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: c5198a1277e024633bf789483ee93817, type: 3}
   m_ShaderKeywords: []
   m_SavedProperties:
     serializedVersion: 2
@@ -24,4 +24,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: .78039217, g: .956862748, b: .392156869, a: 1}
+        second: {r: .823529422, g: .850980401, b: .278431386, a: 1}
