@@ -108,22 +108,6 @@ public class GameManager : MonoBehaviour
 				}
 			}
 		}
-		
-		// List of possible moves
-		bool validMove = false;
-		foreach(Vector2 direction in GetNeighborCoordinates())
-		{
-			Vector2 coordinate = m_CurrentPosition + direction;
-			if(!m_Map.ContainsKey(coordinate) && (GetDistanceBetween(Vector2.zero, coordinate)<=2f))
-			{
-				validMove = true;
-				break;
-			}
-		}
-		if (!validMove)
-		{
-			Application.LoadLevel(Application.loadedLevelName);
-		}
 	}
 	
 	public List<Hexagon> m_HexagonPrefabs = new List<Hexagon>();
@@ -141,19 +125,35 @@ public class GameManager : MonoBehaviour
 		m_Marker.transform.position = _AxialCoordinatesTo3DCoordinates(m_CurrentPosition) + Vector3.up;	
 		Hexagon hex = CreateHexagon(m_CurrentPosition);
 		
-//		List<Hexagon> sameColorHexagons = new List<Hexagon>();
-//		RecursivelyGetSameColorHexagons(hex, ref sameColorHexagons);
-//		if (sameColorHexagons.Count > 2)
-//		{
-//			m_Score += 10 * (int)(Mathf.Pow(2, (sameColorHexagons.Count-2)));
-//			foreach(Hexagon sameColorHexagon in sameColorHexagons)
-//			{
-//				if (sameColorHexagon != hex)
-//				{
-//					DestroyHexagon(sameColorHexagon);
-//				}
-//			}
-//		}
+		List<Hexagon> sameColorHexagons = new List<Hexagon>();
+		RecursivelyGetSameColorHexagons(hex, ref sameColorHexagons);
+		if (sameColorHexagons.Count > 2)
+		{
+			m_Score += 10 * (int)(Mathf.Pow(2, (sameColorHexagons.Count-2)));
+			foreach(Hexagon sameColorHexagon in sameColorHexagons)
+			{
+				if (sameColorHexagon != hex)
+				{
+					DestroyHexagon(sameColorHexagon);
+				}
+			}
+		}
+		
+		// List of possible moves
+		bool validMove = false;
+		foreach(Vector2 direction in GetNeighborCoordinates())
+		{
+			Vector2 coordinate = m_CurrentPosition + direction;
+			if(!m_Map.ContainsKey(coordinate) && (GetDistanceBetween(Vector2.zero, coordinate)<=2f))
+			{
+				validMove = true;
+				break;
+			}
+		}
+		if (!validMove)
+		{
+			Application.LoadLevel(Application.loadedLevelName);
+		}
 		
 		m_ScoreTextMesh.text = m_Score.ToString();
 	}
