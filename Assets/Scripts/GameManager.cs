@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
 	public GUIText m_ScoreText;
 	int m_Score;
 	
+	public Transform m_MapTransform;
 	void Start ()
 	{
 		Application.targetFrameRate = 300;
@@ -31,20 +32,21 @@ public class GameManager : MonoBehaviour
 		m_Marker.transform.position = _AxialCoordinatesTo3DCoordinates(m_CurrentPosition) + Vector3.up;
 		
 		// Setup the map
-		for(int i = -2; i<=2; ++i)
+		Hex[] hexes = m_MapTransform.GetComponentsInChildren<Hex>();
+		foreach(Hex h in hexes)
 		{
-			for(int j = Mathf.Max(-2, -i-2); j <= Mathf.Min(2, -i+2); ++j)
-			{
-				Vector2 axialCoordinates = new Vector2(i, -i-j);
-				Vector3 position = _AxialCoordinatesTo3DCoordinates(axialCoordinates);
-				Hexagon hex = GameObject.Instantiate(m_HexagonPrefab, position, Quaternion.identity) as Hexagon;
-				hex.m_Coordinates = axialCoordinates;
-				hex.m_GameManager = this;
-				hex.GetComponent<Renderer>().material = m_BackgroundMaterial;
-				hex.m_Id = -1;
-				hex.name = "Hexagon (" + axialCoordinates.x + ", " + axialCoordinates.y + ")";
-				m_Map[axialCoordinates] = hex;
-			}
+			Vector2 axialCoordinates = h.PositionToAxialCoordinates(h.transform.position);
+			h.gameObject.SetActive(false);
+			if (m_Map.ContainsKey(axialCoordinates)) continue;
+			
+			Vector3 position = _AxialCoordinatesTo3DCoordinates(axialCoordinates);
+			Hexagon hex = GameObject.Instantiate(m_HexagonPrefab, position, Quaternion.identity) as Hexagon;
+			hex.m_Coordinates = axialCoordinates;
+			hex.m_GameManager = this;
+			hex.GetComponent<Renderer>().material = m_BackgroundMaterial;
+			hex.m_Id = -1;
+			hex.name = "Hexagon (" + axialCoordinates.x + ", " + axialCoordinates.y + ")";
+			m_Map[axialCoordinates] = hex;
 		}
 		
 		m_NextHexagonIds.Add(Random.Range(0, m_Materials.Count));
@@ -96,7 +98,7 @@ public class GameManager : MonoBehaviour
 				m_IsSwipeActive = false;
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 				Vector2 delta = mousePosition - m_BeginningMousePosition;
-				if (delta.magnitude > 50f)
+				if (delta.magnitude > 80f)
 				{
 					m_IsSwipeActive = false;
 					SwipeTo(delta);
@@ -109,7 +111,7 @@ public class GameManager : MonoBehaviour
 			{
 				Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 				Vector2 delta = mousePosition - m_BeginningMousePosition;
-				if (delta.magnitude > 50f)
+				if (delta.magnitude > 80f)
 				{
 					m_IsSwipeActive = false;
 					SwipeTo(delta);
@@ -167,11 +169,11 @@ public class GameManager : MonoBehaviour
 	}
 	
 	[HideInInspector]
-	public Vector2 m_AxialAxis2 = new Vector2(0, 1);
-	[HideInInspector]
 	public Vector2 m_AxialAxis0 = new Vector2(1, 0);
 	[HideInInspector]
 	public Vector2 m_AxialAxis1 = new Vector2(1, -1);
+	[HideInInspector]
+	public Vector2 m_AxialAxis2 = new Vector2(0, 1);
 	
 	Vector2 _InputDeltaToDisplacement(Vector2 a_InputDelta)
 	{
@@ -249,5 +251,14 @@ public class GameManager : MonoBehaviour
 		yield return m_AxialAxis1;
 		yield return -m_AxialAxis2;
 		yield return m_AxialAxis2;
+	}
+	
+	Vector2 PositionToAxialCoordinates(Vector3 a_Position)
+	{
+		Vector2 axialCoordinates = Vector2.zero;
+		float temp = Mathf.Floor(a_Position.x + Mathf.Sqrt(3f) * a_Position.z + 1f);
+		axialCoordinates.x = Mathf.Floor((Mathf.Floor(2f * a_Position.x + 1f) + temp) / 3f);
+		axialCoordinates.y = Mathf.Floor((temp + Mathf.Floor(-a_Position.x + Mathf.Sqrt(3f) * a_Position.z + 1f))/3f);
+		return axialCoordinates;
 	}
 }

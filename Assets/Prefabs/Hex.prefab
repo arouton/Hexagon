@@ -12,7 +12,7 @@ GameObject:
   - 23: {fileID: 2300000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: Hexagon
+  m_Name: Hex
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,13 +62,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3336bba69a08f48918628096d7fdf3b2, type: 3}
+  m_Script: {fileID: 11500000, guid: f10eae3147acc4898ae1cb63bccc3659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Height: 1
-  m_Radius: .970000029
-  m_GameManager: {fileID: 0}
-  m_Id: 0
+  m_Radius: 1
   m_Coordinates: {x: 0, y: 0}
 --- !u!1001 &100100000
 Prefab:
